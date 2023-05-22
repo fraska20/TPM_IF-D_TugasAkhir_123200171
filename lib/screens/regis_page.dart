@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_weather/models/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import '../models/pengguna.dart';
-import '../models/boxes.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -11,27 +12,26 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final myBox = HiveBoxex();
 
-  validated() {
-    if (_formKey.currentState != null && _formKey.currentState.validate()) {
-      _onFormSubmit();
-      print("Form Validated");
-    } else {
-      print("Form not validated");
-      return;
-    }
-  }
+  // validated() {
+  //   if (_formKey.currentState != null && _formKey.currentState.validate()) {
+  //     _onFormSubmit();
+  //     print("Form Validated");
+  //   } else {
+  //     print("Form not validated");
+  //     return;
+  //   }
+  // }
 
   String username;
   String password;
 
-  void _onFormSubmit() async {
-    // Box<Pengguna> penggunaBox = Hive.box<Pengguna>(HiveBoxex.pengguna);
-    // penggunaBox.add(Pengguna(username: username, password: password));
-    await myBox.putData(username, password);
-    Navigator.of(context).pop();
-  }
+  // void _onFormSubmit() {
+  //   Box<Pengguna> penggunaBox = Hive.box<Pengguna>(HiveBoxex.pengguna);
+  //   penggunaBox.add(Pengguna(username: username, password: password));
+  //   Navigator.of(context).pop();
+  //   print(penggunaBox);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               primary: Colors.blue[400],
                               onPrimary: Colors.white,
                             ),
-                            onPressed: () async {
+                            onPressed: () {
                               // print(username);
                               // var box = Hive.box<Pengguna>(HiveBoxex.pengguna);
                               // var boxusername;
@@ -137,21 +137,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               //     }
                               //   }
                               // }
-                              String savedPassword =
-                                  await myBox.getData('pengguna_${username}');
-                              if (savedPassword == null) {
-                                validated();
-                              } else {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text("username sudah digunakan"),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              }
+                              register(username, password);
                             },
                             child: Text('Buat Akun')),
                         SizedBox(height: 24),
-                        // _buildButtonSubm it(),
+                        // _buildButtonSubmit(),
                       ],
                     ),
                   ),
@@ -162,5 +152,60 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  void register(String username, String password) async {
+    final encryptedPassword = encryptPassword(password);
+
+    final box = await Hive.openBox<Pengguna>(HiveBoxex.pengguna);
+    final existingUser = box.values.firstWhere(
+      (user) => user.username == username,
+      orElse: () => null,
+    );
+
+    if (existingUser == null &&
+        _formKey.currentState != null &&
+        _formKey.currentState.validate()) {
+      final newUser = Pengguna(username: username, password: encryptedPassword);
+      await box.add(newUser);
+      print(newUser);
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Registrasi Berhasil'),
+          content: Text('Pengguna berhasil didaftarkan.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Registrasi Gagal'),
+          content: Text('Username sudah digunakan.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  String encryptPassword(String password) {
+    final key = encrypt.Key.fromLength(32);
+    final iv = encrypt.IV.fromLength(16);
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encrypted = encrypter.encrypt(password, iv: iv);
+    return encrypted.base64;
   }
 }

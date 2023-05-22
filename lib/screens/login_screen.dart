@@ -1,12 +1,12 @@
 import 'dart:ui';
-
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
+import 'package:flutter_weather/models/boxes.dart';
 import 'package:flutter_weather/screens/loading_screen.dart';
 import 'package:flutter_weather/screens/navigasi.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/pengguna.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/boxes.dart';
 import 'regis_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   final password_controller = TextEditingController();
   bool isLoginSuccess = true;
   SharedPreferences logindata;
-  final myBox = HiveBoxex();
 
   @override
   void initState() {
@@ -204,25 +203,44 @@ class _LoginPageState extends State<LoginPage> {
           //     isLoginSuccess = false;
           //   });
           // }
+          // SnackBar snackBar = SnackBar(
+          //   content: Text(
+          //     text,
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          // );
+          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-          if (username != '' && password != '') {
-            String savedPassword = await myBox.getData('pengguna_${username}');
-            if (savedPassword != null && password == savedPassword) {
-              await logindata.setString('username', username);
-              if (mounted) {
-                setState(() {
-                  text = "Login Berhasil";
-                  isLoginSuccess = true;
-                });
-                Navigator.of(context).pushAndRemoveUntil(
+          if (username.isNotEmpty && password.isNotEmpty) {
+            final encrypter =
+                encrypt.Encrypter(encrypt.AES(encrypt.Key.fromLength(32)));
+            final encryptedPassword =
+                encrypter.encrypt(password, iv: encrypt.IV.fromLength(16));
+
+            var box = await Hive.openBox<Pengguna>(HiveBoxex.pengguna);
+            for (int index = 0; index < box.values.length; index++) {
+              Pengguna res = box.getAt(index);
+              print(res);
+
+              if (res.password == encryptedPassword.base64 &&
+                  res.username == username) {
+                logindata.setString('username', username);
+                if (mounted) {
+                  setState(() {
+                    text = "Login Berhasil";
+                    isLoginSuccess = true;
+                  });
+                  Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => LoadingPage()),
-                    (route) => false);
+                    (route) => false,
+                  );
+                }
+              } else {
+                setState(() {
+                  text = "Login Gagal";
+                  isLoginSuccess = false;
+                });
               }
-            } else {
-              setState(() {
-                text = "Login Gagal";
-                isLoginSuccess = false;
-              });
             }
           } else {
             setState(() {
@@ -230,14 +248,14 @@ class _LoginPageState extends State<LoginPage> {
               isLoginSuccess = false;
             });
           }
-
-          SnackBar snackBar = SnackBar(
-            content: Text(
-              text,
-              style: TextStyle(color: Colors.white),
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
       ),
     );
