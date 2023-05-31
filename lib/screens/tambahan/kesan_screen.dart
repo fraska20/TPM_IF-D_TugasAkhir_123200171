@@ -8,11 +8,11 @@ class KesanPage extends StatefulWidget {
 }
 
 class _KesanPageState extends State<KesanPage> {
-  List<String> panduan = [
+  List<String> temp = [
     "KESAN : ",
-    "Penyampaian materi mudah dipahami dan runtut",
+    "Mata kuliah Teknologi Pembelajaran Mobile telah memberikan pengalaman yang sangat berharga bagi saya. Selama kuliah ini, saya belajar tentang konsep-konsep dasar dalam pengembangan aplikasi mobile serta teknik-teknik pembelajaran yang dapat diimplementasikan dalam konteks mobile.",
     "PESAN : ",
-    "Jangan banyak-banyak tugasnya xixi"
+    "Tugasnya jangan banyak-banyak pak xixi"
   ];
 
   @override
@@ -22,13 +22,13 @@ class _KesanPageState extends State<KesanPage> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(10),
           child: ListView.builder(
-            itemCount: panduan.length,
+            itemCount: temp.length,
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(
-                  panduan[index],
+                  temp[index],
                   style: TextStyle(color: Colors.white),
                 ),
               );

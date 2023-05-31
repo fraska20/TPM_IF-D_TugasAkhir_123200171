@@ -26,6 +26,7 @@ class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        // backgroundColor: Colors.red,
         appBar: AppBar(),
         body: Container(
           padding: EdgeInsets.all(16.0),
@@ -55,6 +56,7 @@ class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
               ),
               SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
+                dropdownColor: Colors.grey[900],
                 style: TextStyle(fontSize: 20, color: Colors.white),
                 value: selectedCurrency,
                 onChanged: (value) {
@@ -66,7 +68,10 @@ class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(),
+                    ),
                   );
                 }).toList(),
                 decoration: InputDecoration(
@@ -74,13 +79,18 @@ class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
                   labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(),
                   filled: true,
-                  fillColor: Colors.grey, // Dark mode dropdown background color
+                  fillColor: Colors.grey[900],
+                  // Dark mode dropdown background color
                 ),
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: convertCurrency,
                 child: Text('Convert'),
+                style: ElevatedButton.styleFrom(
+                  primary:
+                      Colors.blue[400], // Ubah warna latar belakang di sini
+                ),
               ),
               SizedBox(height: 16.0),
               Text(

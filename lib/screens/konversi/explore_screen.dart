@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/screens/money_screen.dart';
-import 'package:flutter_weather/screens/time_screen.dart';
+import 'package:flutter_weather/screens/konversi/money_screen.dart';
+import 'package:flutter_weather/screens/konversi/time_screen.dart';
 import 'package:flutter_weather/utilities/constants.dart';
 
 class ExplorePage extends StatefulWidget {

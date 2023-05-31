@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/screens/login_screen.dart';
+import 'package:flutter_weather/screens/login/login_screen.dart';
 import 'package:flutter_weather/utilities/constants.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;

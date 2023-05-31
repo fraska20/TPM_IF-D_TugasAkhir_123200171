@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/services/weather.dart';
 import 'package:flutter_weather/utilities/constants.dart';
-import 'package:flutter_weather/screens/city_screen.dart';
+import 'package:flutter_weather/screens/home/city_screen.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {

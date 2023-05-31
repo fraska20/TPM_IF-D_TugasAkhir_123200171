@@ -2,10 +2,9 @@ import 'dart:ui';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/models/boxes.dart';
-import 'package:flutter_weather/screens/loading_screen.dart';
-import 'package:flutter_weather/screens/navigasi.dart';
+import 'package:flutter_weather/screens/home/loading_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../models/pengguna.dart';
+import '../../models/pengguna.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'regis_page.dart';
 
@@ -31,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     bool isLogin = (logindata.getString('username') != null) ? true : false;
     if (isLogin && mounted) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Navigasi()),
+          MaterialPageRoute(builder: (context) => LoadingPage()),
           (route) => false);
     }
   }

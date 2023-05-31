@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_weather/models/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import '../models/pengguna.dart';
+import '../../models/pengguna.dart';
 
 class RegisterPage extends StatefulWidget {
   @override

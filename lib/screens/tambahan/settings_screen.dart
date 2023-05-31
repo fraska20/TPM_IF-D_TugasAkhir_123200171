@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather/screens/kesan_screen.dart';
-import 'package:flutter_weather/screens/login_screen.dart';
-import 'package:flutter_weather/screens/profile_screen.dart';
+import 'package:flutter_weather/screens/tambahan/kesan_screen.dart';
+import 'package:flutter_weather/screens/login/login_screen.dart';
+import 'package:flutter_weather/screens/tambahan/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {

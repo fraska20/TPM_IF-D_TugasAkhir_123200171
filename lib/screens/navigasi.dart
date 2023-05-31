@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-import 'package:flutter_weather/screens/explore_screen.dart';
-import 'package:flutter_weather/screens/home_screen.dart';
-import 'package:flutter_weather/screens/settings_screen.dart';
+import 'package:flutter_weather/screens/konversi/explore_screen.dart';
+import 'package:flutter_weather/screens/home/home_screen.dart';
+import 'package:flutter_weather/screens/tambahan/settings_screen.dart';
 import 'package:iconsax/iconsax.dart';
 
 class Navigasi extends StatefulWidget {
