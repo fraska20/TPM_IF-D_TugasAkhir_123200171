@@ -8,10 +8,9 @@ class CurrencyConvertPage extends StatefulWidget {
 class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
   double amount = 0.0;
   double convertedAmount = 0.0;
-  String selectedCurrency = 'IDR';
+  String selectedCurrency = 'USD';
 
   final Map<String, double> conversionRates = {
-    'IDR': 1, // 1 IDR = 1 IDR
     'USD': 0.000070, // 1 USD = 0.000070 IDR
     'SAR': 0.00026, // 1 SAR = 0.00026 IDR
     'CNY': 0.00046, // 1 CNY = 0.00046 IDR
@@ -46,7 +45,7 @@ class _CurrencyConvertPageState extends State<CurrencyConvertPage> {
                   });
                 },
                 decoration: InputDecoration(
-                  labelText: 'Amount',
+                  labelText: 'Amount Rp',
                   labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(),
                   filled: true,

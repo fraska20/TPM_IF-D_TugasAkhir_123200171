@@ -12,26 +12,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  // validated() {
-  //   if (_formKey.currentState != null && _formKey.currentState.validate()) {
-  //     _onFormSubmit();
-  //     print("Form Validated");
-  //   } else {
-  //     print("Form not validated");
-  //     return;
-  //   }
-  // }
+  var passwordVisible = false;
 
   String username;
   String password;
-
-  // void _onFormSubmit() {
-  //   Box<Pengguna> penggunaBox = Hive.box<Pengguna>(HiveBoxex.pengguna);
-  //   penggunaBox.add(Pengguna(username: username, password: password));
-  //   Navigator.of(context).pop();
-  //   print(penggunaBox);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +77,22 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelStyle: TextStyle(
                               color: Colors.white,
                             ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                // Menyesuaikan ikon berdasarkan status visibilitas teks password
+                                passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisible = !passwordVisible;
+                                });
+                              },
+                            ),
                           ),
-                          obscureText: true,
+                          obscureText: !passwordVisible,
                           validator: (String value) {
                             if (value == null || value.trim().length == 0) {
                               return "Required";
@@ -112,31 +110,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               onPrimary: Colors.white,
                             ),
                             onPressed: () {
-                              // print(username);
-                              // var box = Hive.box<Pengguna>(HiveBoxex.pengguna);
-                              // var boxusername;
-                              // int index = 0;
-                              // if (box.values.isEmpty) {
-                              //   validated();
-                              // } else {
-                              //   for (index;
-                              //       index < box.values.length;
-                              //       index++) {
-                              //     Pengguna res = box.getAt(index);
-                              //     boxusername = res.username;
-
-                              //     if (username == boxusername) {
-                              //       SnackBar snackBar = SnackBar(
-                              //           content:
-                              //               Text("username sudah digunakan"));
-                              //       ScaffoldMessenger.of(context)
-                              //           .showSnackBar(snackBar);
-                              //     } else {
-                              //       index = box.values.length;
-                              //       validated();
-                              //     }
-                              //   }
-                              // }
                               register(username, password);
                             },
                             child: Text('Buat Akun')),

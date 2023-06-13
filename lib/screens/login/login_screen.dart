@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final username_controller = TextEditingController();
   final password_controller = TextEditingController();
   bool isLoginSuccess = true;
+  var passwordVisible = false;
   SharedPreferences logindata;
 
   @override
@@ -27,8 +28,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void checkIsLogin() async {
     logindata = await SharedPreferences.getInstance();
-    bool isLogin = (logindata.getString('username') != null) ? true : false;
-    if (isLogin && mounted) {
+    bool isLogin = (logindata.getBool('login') ?? true);
+    print(isLogin);
+    if (isLogin == false) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoadingPage()),
           (route) => false);
@@ -119,31 +121,44 @@ class _LoginPageState extends State<LoginPage> {
       child: TextField(
         controller: password_controller,
         enabled: true,
-        obscureText: true,
+        obscureText: !passwordVisible,
         style: TextStyle(color: Colors.white),
         // onChanged: (value) {
         //   password = value;
         // },
         decoration: InputDecoration(
-            prefixIcon: Icon(Icons.lock_rounded, color: Colors.white),
-            hintText: "password",
-            hintStyle: TextStyle(
+          prefixIcon: Icon(Icons.lock_rounded, color: Colors.white),
+          hintText: "password",
+          hintStyle: TextStyle(
+            color: Colors.white,
+          ),
+          labelText: "password",
+          labelStyle: TextStyle(
+            color: Colors.white,
+          ),
+          contentPadding: EdgeInsets.all(10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(color: Color(0xFFFCA311)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderSide: BorderSide(
+                color: (isLoginSuccess) ? Colors.blue[400] : Colors.red),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              // Menyesuaikan ikon berdasarkan status visibilitas teks password
+              passwordVisible ? Icons.visibility : Icons.visibility_off,
               color: Colors.white,
             ),
-            labelText: "password",
-            labelStyle: TextStyle(
-              color: Colors.white,
-            ),
-            contentPadding: EdgeInsets.all(10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: BorderSide(color: Color(0xFFFCA311)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: BorderSide(
-                  color: (isLoginSuccess) ? Colors.blue[400] : Colors.red),
-            )),
+            onPressed: () {
+              setState(() {
+                passwordVisible = !passwordVisible;
+              });
+            },
+          ),
+        ),
       ),
     );
   }
@@ -167,49 +182,6 @@ class _LoginPageState extends State<LoginPage> {
           String password = password_controller.text;
           String text = "";
 
-          // if (username != '' && password != '') {
-          //   var box = Hive.box<Pengguna>(HiveBoxex.pengguna);
-          //   var boxusername;
-          //   var boxpassword;
-          //   int index = 0;
-          //   for (index; index < box.values.length; index++) {
-          //     Pengguna res = box.getAt(index);
-          //     boxusername = res.username;
-          //     boxpassword = res.password;
-
-          //     if (username == boxusername && password == boxpassword) {
-          //       await logindata.setString('username', username);
-
-          //       if (mounted) {
-          //         setState(() {
-          //           text = "Login Berhasil";
-          //           isLoginSuccess = true;
-          //         });
-          //         Navigator.of(context).pushAndRemoveUntil(
-          //             MaterialPageRoute(builder: (context) => LoadingPage()),
-          //             (route) => false);
-          //       }
-          //     } else {
-          //       setState(() {
-          //         text = "Login Gagal";
-          //         isLoginSuccess = false;
-          //       });
-          //     }
-          //   }
-          // } else {
-          //   setState(() {
-          //     text = "Isi username dan password";
-          //     isLoginSuccess = false;
-          //   });
-          // }
-          // SnackBar snackBar = SnackBar(
-          //   content: Text(
-          //     text,
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          // );
-          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
           if (username.isNotEmpty && password.isNotEmpty) {
             final encrypter =
                 encrypt.Encrypter(encrypt.AES(encrypt.Key.fromLength(32)));
@@ -223,6 +195,7 @@ class _LoginPageState extends State<LoginPage> {
 
               if (res.password == encryptedPassword.base64 &&
                   res.username == username) {
+                logindata.setBool('login', false);
                 logindata.setString('username', username);
                 if (mounted) {
                   setState(() {

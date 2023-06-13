@@ -98,8 +98,9 @@ class _SettingPageState extends State<SettingPage> {
                     actions: [
                       TextButton(
                           child: Text('Yes'),
-                          onPressed: () async {
-                            await logindata.remove('username');
+                          onPressed: () {
+                            logindata.setBool('login', false);
+                            logindata.remove('username');
                             if (mounted) {
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
